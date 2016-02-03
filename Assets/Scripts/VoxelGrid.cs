@@ -1,12 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[System.Serializable]
 public class VoxelGrid : MonoBehaviour {
+	public TextAsset initialFile = null;
+	public Voxel[] voxels;
 
 	// Use this for initialization
 	void Start () {
 		Mesh mesh = new Mesh();
 		GetComponent<MeshFilter>().mesh = mesh;
+
+		if (initialFile != null) {
+			JsonUtility.FromJsonOverwrite(initialFile.text, this);
+		}
 
 		GenerateMesh();
 	}
@@ -38,21 +45,30 @@ public class VoxelGrid : MonoBehaviour {
 
 		Mesh mesh = GetComponent<MeshFilter>().mesh;
 
-		Vector3[] vertices = new Vector3[transform.childCount * 8];
-		int[] triangles = new int[transform.childCount * 8 * 2 * 3];
+		int numVoxels = voxels.Length;
+		int verticesPerCube = 8;
+		int trianglesPerCube = 6 * 2;
+
+		Vector3[] vertices = new Vector3[numVoxels * verticesPerCube];
+		int[] triangles = new int[numVoxels * trianglesPerCube * 3];
 		Color[] colors = new Color[vertices.Length];
 
-		for (int c = 0; c < transform.childCount; c++) {
-			Transform childTransform = transform.GetChild(c);
-			Color color = childTransform.gameObject.GetComponent<Voxel>().color;
-			for (int v = 0; v < 8; v++) {
-				var vert = baseVertices[v];
-				vertices[c * 8 + v] = vert + childTransform.position;
-				colors[c * 8 + v] = color;
+		for (int c = 0; c < numVoxels; c++) {
+			Voxel voxel = voxels[c];
+			Color color = voxel.color;
+			Vector3 position = new Vector3(voxel.x, voxel.y, voxel.z);
+			int cubeVertexStartIndex = c * verticesPerCube;
+
+			for (int v = 0; v < verticesPerCube; v++) {
+				Vector3 vert = baseVertices[v];
+				int vertexIndex = cubeVertexStartIndex + v;
+				vertices[vertexIndex] = vert + position;
+				colors[vertexIndex] = color;
 			}
 
 			for (int t = 0; t < baseTriangles.Length; t++) {
-				triangles[c * 8 * 2 * 3 + t] = baseTriangles[t] + c * 8;
+				int triangleStartIndex = c * trianglesPerCube * 3;
+				triangles[triangleStartIndex + t] = baseTriangles[t] + cubeVertexStartIndex;
 			}
 		}
 
@@ -62,9 +78,10 @@ public class VoxelGrid : MonoBehaviour {
 
 		Vector2[] uvs = new Vector2[vertices.Length];
 
-		for (int i=0; i < uvs.Length; i++) {
+		for (int i = 0; i < uvs.Length; i++) {
 			uvs[i] = new Vector2(vertices[i].x, vertices[i].z);
 		}
 		mesh.uv = uvs;
+		mesh.RecalculateNormals();
 	}
 }

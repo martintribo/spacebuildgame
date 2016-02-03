@@ -1,16 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Voxel : MonoBehaviour {
+[System.Serializable]
+public class Voxel {
+	public int x;
+	public int y;
+	public int z;
 	public Color color;
 
-	// Use this for initialization
-	void Start () {
-
-	}
-
-	// Update is called once per frame
-	void Update () {
-
+	public Voxel() {
+		x = 0;
+		y = 0;
+		z = 0;
+		color = Color.white;
 	}
 }
