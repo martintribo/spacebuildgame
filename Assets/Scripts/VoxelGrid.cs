@@ -3,19 +3,16 @@ using System.Collections;
 
 [System.Serializable]
 public class VoxelGrid : MonoBehaviour {
-	public TextAsset initialFile = null;
 	public Voxel[] voxels;
+
+	void Awake () {
+		Mesh mesh = new Mesh();
+		GetComponent<MeshFilter>().mesh = mesh;
+	}
 
 	// Use this for initialization
 	void Start () {
-		Mesh mesh = new Mesh();
-		GetComponent<MeshFilter>().mesh = mesh;
 
-		if (initialFile != null) {
-			JsonUtility.FromJsonOverwrite(initialFile.text, this);
-		}
-
-		GenerateMesh();
 	}
 
 	// Update is called once per frame
@@ -23,7 +20,7 @@ public class VoxelGrid : MonoBehaviour {
 
 	}
 
-	void GenerateMesh() {
+	public void GenerateMesh() {
 		Vector3[] baseVertices = new Vector3[] {
 			new Vector3(-0.5F, -0.5F, -0.5F),
 			new Vector3(0.5F, -0.5F, -0.5F),
