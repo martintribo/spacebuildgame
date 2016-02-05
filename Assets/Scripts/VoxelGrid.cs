@@ -18,14 +18,14 @@ public class VoxelGrid : MonoBehaviour {
 
 	public void GenerateMesh() {
 		Vector3[] baseVertices = new Vector3[] {
-			new Vector3(-0.5F, -0.5F, -0.5F),
-			new Vector3(0.5F, -0.5F, -0.5F),
-			new Vector3(-0.5F, 0.5F, -0.5F),
-			new Vector3(0.5F, 0.5F, -0.5F),
-			new Vector3(-0.5F, -0.5F, 0.5F),
-			new Vector3(0.5F, -0.5F, 0.5F),
-			new Vector3(-0.5F, 0.5F, 0.5F),
-			new Vector3(0.5F, 0.5F, 0.5F),
+			new Vector3(0, 0, 0),
+			new Vector3(1, 0, 0),
+			new Vector3(0, 1, 0),
+			new Vector3(1, 1, 0),
+			new Vector3(0, 0, 1),
+			new Vector3(1, 0, 1),
+			new Vector3(0, 1, 1),
+			new Vector3(1, 1, 1),
 		};
 		int[] baseTriangles = new int[] {
 			0, 2, 3, 0, 3, 1, //-z
