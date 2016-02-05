@@ -3,10 +3,10 @@ using System.Collections;
 
 [ExecuteInEditMode]
 public class VoxelCube : MonoBehaviour {
-	public int width;
-	public int length;
-	public int height;
-	public Color color;
+	public int width = 1;
+	public int length = 1;
+	public int height = 1;
+	public Color color = Color.white;
 
 	// Use this for initialization
 	void Start () {

@@ -6,6 +6,10 @@ using System.Collections;
 public class VoxelGrid : MonoBehaviour {
 	[HideInInspector] public Voxel[] voxels;
 
+	void Awake() {
+		GetComponent<MeshFilter>().sharedMesh = new Mesh();;
+	}
+
 	// Use this for initialization
 	void Start () {
 
@@ -38,8 +42,7 @@ public class VoxelGrid : MonoBehaviour {
 
 		Mesh mesh = GetComponent<MeshFilter>().sharedMesh;
 		if (mesh == null) {
-			mesh = new Mesh();
-			GetComponent<MeshFilter>().sharedMesh = mesh;
+			return;
 		}
 		mesh.Clear();
 
