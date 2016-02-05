@@ -8,10 +8,10 @@ public class Voxel {
 	public int z;
 	public Color color;
 
-	public Voxel() {
-		x = 0;
-		y = 0;
-		z = 0;
-		color = Color.white;
+	public Voxel(int x = 0, int y = 0, int z = 0, Color color = default(Color)) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.color = color;
 	}
 }

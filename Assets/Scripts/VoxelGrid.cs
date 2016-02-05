@@ -2,13 +2,9 @@
 using System.Collections;
 
 [System.Serializable]
+[ExecuteInEditMode]
 public class VoxelGrid : MonoBehaviour {
-	public Voxel[] voxels;
-
-	void Awake () {
-		Mesh mesh = new Mesh();
-		GetComponent<MeshFilter>().mesh = mesh;
-	}
+	[HideInInspector] public Voxel[] voxels;
 
 	// Use this for initialization
 	void Start () {
@@ -40,7 +36,12 @@ public class VoxelGrid : MonoBehaviour {
 			1, 5, 4, 1, 4, 0 //-y
 		};
 
-		Mesh mesh = GetComponent<MeshFilter>().mesh;
+		Mesh mesh = GetComponent<MeshFilter>().sharedMesh;
+		if (mesh == null) {
+			mesh = new Mesh();
+			GetComponent<MeshFilter>().sharedMesh = mesh;
+		}
+		mesh.Clear();
 
 		int numVoxels = voxels.Length;
 		int verticesPerCube = 8;
