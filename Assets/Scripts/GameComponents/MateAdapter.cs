@@ -4,15 +4,11 @@ using System.Collections;
 // MateAdapters exist at the points where modules can attach to each other,
 // facing towards where the other adapter will attach
 public class MateAdapter : MonoBehaviour {
-	public GameObject otherAdapter = null;
+	public MateAdapter connectedAdapter = null;
 
 	// Use this for initialization
 	void Start () {
-		if (otherAdapter != null) {
-			//Debug connect to other adapter
-			Debug.Log("Connecting");
-			ConnectToAdapter(otherAdapter);
-		}
+
 	}
 
 	// Update is called once per frame
@@ -20,8 +16,9 @@ public class MateAdapter : MonoBehaviour {
 
 	}
 
-	void ConnectToAdapter(GameObject adapter) {
-		Transform ot = adapter.GetComponent<Transform>();
+	public void ConnectToAdapter(MateAdapter adapter) {
+		MateAdapter.ConnectAdapters(this, adapter);
+		Transform ot = adapter.gameObject.GetComponent<Transform>();
 		Transform moduleTransform = transform.parent.parent; // TODO: Use Module.GetModule(GameObject)
 
 		Vector3 forwardDir = ot.rotation * Vector3.back;
@@ -31,5 +28,35 @@ public class MateAdapter : MonoBehaviour {
 		moduleTransform.rotation = Quaternion.LookRotation(forwardDir, upDir) * relative;
 
 		moduleTransform.position -= transform.position - ot.position;
+	}
+
+	public static void ConnectAdapters(MateAdapter adapter1, MateAdapter adapter2) {
+		if (adapter1 != null) {
+			if (adapter1.connectedAdapter != null && adapter1.connectedAdapter != adapter2) {
+				adapter1.connectedAdapter.connectedAdapter = null;
+			}
+			adapter1.connectedAdapter = adapter2;
+		}
+		if (adapter2 != null) {
+			if (adapter2.connectedAdapter != null && adapter2.connectedAdapter != adapter1) {
+				adapter2.connectedAdapter.connectedAdapter = null;
+			}
+			adapter2.connectedAdapter = adapter1;
+		}
+	}
+
+	public static MateAdapter GetAdapter(GameObject obj) {
+		GameObject currentGO = obj;
+		MateAdapter adapter = null;
+
+		while (currentGO != null && adapter == null) {
+			adapter = currentGO.GetComponent<MateAdapter>();
+
+			if (adapter == null) {
+				currentGO = currentGO.transform.parent.gameObject;
+			}
+		}
+
+		return adapter;
 	}
 }
