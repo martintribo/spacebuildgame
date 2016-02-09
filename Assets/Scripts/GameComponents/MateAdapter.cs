@@ -19,7 +19,7 @@ public class MateAdapter : MonoBehaviour {
 	public void ConnectToAdapter(MateAdapter adapter) {
 		MateAdapter.ConnectAdapters(this, adapter);
 		Transform ot = adapter.gameObject.GetComponent<Transform>();
-		Transform moduleTransform = transform.parent.parent; // TODO: Use Module.GetModule(GameObject)
+		Transform moduleTransform = Module.GetModule(gameObject).transform;
 
 		Vector3 forwardDir = ot.rotation * Vector3.back;
 		Vector3 upDir = ot.rotation * Vector3.up;
