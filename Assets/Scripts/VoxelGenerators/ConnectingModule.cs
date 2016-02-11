@@ -96,6 +96,7 @@ public class ConnectingModule : MonoBehaviour {
 			vb.Add(new Voxel(diameter -1, v.x, v.y, color));
 		}
 
+		grid.voxels = vb.GetVoxels();
 
 		grid.GenerateMesh();
 	}
@@ -105,8 +106,8 @@ class VoxelBuilder {
 	List<Voxel> voxels = new List<Voxel>();
 	Dictionary<int, Dictionary<int, Dictionary<int, Voxel>>> voxelMap = new Dictionary<int, Dictionary<int, Dictionary<int, Voxel>>>();
 
-	public Voxel[] GetVoxels() {
-		return voxels.ToArray();
+	public List<Voxel> GetVoxels() {
+		return new List<Voxel>(voxels);
 	}
 
 	public void Add(Voxel voxel) {
