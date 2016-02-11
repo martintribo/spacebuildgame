@@ -1,23 +1,22 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 [System.Serializable]
 [ExecuteInEditMode]
 public class VoxelGrid : MonoBehaviour {
-	[HideInInspector] public Voxel[] voxels;
+    public List<Voxel> voxels;
+
 
 	void Awake() {
-		GetComponent<MeshFilter>().sharedMesh = new Mesh();;
-	}
+		GetComponent<MeshFilter>().sharedMesh = new Mesh();
 
-	// Use this for initialization
-	void Start () {
-
-	}
+        if (voxels == null)
+            voxels = new List<Voxel>();
+    }
 
 	// Update is called once per frame
 	void Update () {
-
 	}
 
 	public void GenerateMesh() {
@@ -41,12 +40,14 @@ public class VoxelGrid : MonoBehaviour {
 		};
 
 		Mesh mesh = GetComponent<MeshFilter>().sharedMesh;
+
 		if (mesh == null) {
 			return;
 		}
+
 		mesh.Clear();
 
-		int numVoxels = voxels.Length;
+		int numVoxels = voxels.Count;
 		int verticesPerCube = 8;
 		int trianglesPerCube = 6 * 2;
 
@@ -54,24 +55,29 @@ public class VoxelGrid : MonoBehaviour {
 		int[] triangles = new int[numVoxels * trianglesPerCube * 3];
 		Color[] colors = new Color[vertices.Length];
 
-		for (int c = 0; c < numVoxels; c++) {
-			Voxel voxel = voxels[c];
-			Color color = voxel.color;
-			Vector3 position = new Vector3(voxel.x, voxel.y, voxel.z);
-			int cubeVertexStartIndex = c * verticesPerCube;
+        int iteration = 0;
 
-			for (int v = 0; v < verticesPerCube; v++) {
-				Vector3 vert = baseVertices[v];
-				int vertexIndex = cubeVertexStartIndex + v;
-				vertices[vertexIndex] = vert + position;
-				colors[vertexIndex] = color;
-			}
+        foreach (var voxel in voxels)
+        {
+            var position = new Vector3(voxel.x, voxel.y, voxel.z);
+            var cubeVertexStartIndex = iteration * verticesPerCube;
 
-			for (int t = 0; t < baseTriangles.Length; t++) {
-				int triangleStartIndex = c * trianglesPerCube * 3;
-				triangles[triangleStartIndex + t] = baseTriangles[t] + cubeVertexStartIndex;
-			}
-		}
+            for (int v = 0; v < verticesPerCube; v++)
+            {
+                Vector3 vert = baseVertices[v];
+                int vertexIndex = cubeVertexStartIndex + v;
+                vertices[vertexIndex] = vert + position;
+                colors[vertexIndex] = voxel.color;
+            }
+
+            for (int t = 0; t < baseTriangles.Length; t++)
+            {
+                int triangleStartIndex = iteration * trianglesPerCube * 3;
+                triangles[triangleStartIndex + t] = baseTriangles[t] + cubeVertexStartIndex;
+            }
+
+            iteration++;
+        }
 
 		mesh.vertices = vertices;
 		mesh.triangles = triangles;
@@ -84,5 +90,18 @@ public class VoxelGrid : MonoBehaviour {
 		}
 		mesh.uv = uvs;
 		mesh.RecalculateNormals();
-	}
+
+        //check for mesh collider we can use, set after creating
+        MeshCollider mc = GetComponent<MeshCollider>();
+
+        if (mc != null)
+            mc.sharedMesh = mesh;
+    }
+
+    public void addVoxel(int xpos, int ypos, int zpos, Color color)
+    {
+        this.voxels.Add(new Voxel() { x = xpos, y = ypos, z = zpos, color = color });
+
+        GenerateMesh();
+    }
 }

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 [ExecuteInEditMode]
@@ -49,9 +48,8 @@ public class VoxelCylinder : MonoBehaviour {
 
 	void GenerateShape() {
 		VoxelGrid grid = GetComponent<VoxelGrid>();
-		Voxel[] voxels = new Voxel[octantPoints.Count * 8 * length];
+        var voxels = new List<Voxel>(octantPoints.Count * 8 * length);
 
-		int v = 0;
 		int x0 = diameter / 2;
 		int y0 = diameter / 2;
 		bool even = diameter % 2 == 0;
@@ -64,23 +62,23 @@ public class VoxelCylinder : MonoBehaviour {
 				int x = octantPoints[p].x;
 				int y = octantPoints[p].y;
 
-				voxels[v++] = new Voxel(x + x0, y + y0, l, color);
-				voxels[v++] = new Voxel(y + x0, x + y0, l, color);
+				voxels.Add(new Voxel(x + x0, y + y0, l, color));
+                voxels.Add(new Voxel(y + x0, x + y0, l, color));
 				if (even) {
 					x0 += 1;
 				}
-				voxels[v++] = new Voxel(-x + x0, y + y0, l, color);
-				voxels[v++] = new Voxel(-y + x0, x + y0, l, color);
+                voxels.Add(new Voxel(-x + x0, y + y0, l, color));
+                voxels.Add(new Voxel(-y + x0, x + y0, l, color));
 				if (even) {
 					y0++;
 				}
-				voxels[v++] = new Voxel(-x + x0, -y + y0, l, color);
-				voxels[v++] = new Voxel(-y + x0, -x + y0, l, color);
+                voxels.Add(new Voxel(-x + x0, -y + y0, l, color));
+                voxels.Add(new Voxel(-y + x0, -x + y0, l, color));
 				if (even) {
 					x0--;
 				}
-				voxels[v++] = new Voxel(x + x0, -y + y0, l, color);
-				voxels[v++] = new Voxel(y + x0, -x + y0, l, color);
+                voxels.Add(new Voxel(x + x0, -y + y0, l, color));
+                voxels.Add(new Voxel(y + x0, -x + y0, l, color));
 				if (even) {
 					y0--;
 				}

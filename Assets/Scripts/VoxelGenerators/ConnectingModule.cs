@@ -96,7 +96,7 @@ public class ConnectingModule : MonoBehaviour {
 			vb.Add(new Voxel(diameter -1, v.x, v.y, color));
 		}
 
-		grid.voxels = vb.GetVoxels();
+
 		grid.GenerateMesh();
 	}
 }

@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 [ExecuteInEditMode]
 public class VoxelCube : MonoBehaviour {
@@ -24,13 +24,12 @@ public class VoxelCube : MonoBehaviour {
 
 	void updateVoxels() {
 		VoxelGrid grid = GetComponent<VoxelGrid>();
-		Voxel[] voxels = new Voxel[width * height * length];
+		List<Voxel> voxels = new List<Voxel>(width * height * length);
 
-		int v = 0;
 		for (var x = 0; x < width; x++) {
 			for (var z = 0; z < length; z++) {
 				for (var y = 0; y < height; y++) {
-					voxels[v++] = new Voxel(x, y, z, color);
+                    voxels.Add(new Voxel(x, y, z, color));
 				}
 			}
 		}

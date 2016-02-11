@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 [ExecuteInEditMode]
 public class JsonVoxel : MonoBehaviour {
@@ -25,7 +25,7 @@ public class JsonVoxel : MonoBehaviour {
 		if (initialFile != null) {
 			JsonUtility.FromJsonOverwrite(initialFile.text, grid);
 		} else {
-			grid.voxels = new Voxel[0];
+            grid.voxels = new List<Voxel>();
 		}
 
 		grid.GenerateMesh();
