@@ -8,7 +8,11 @@ public class MateAdapter : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-
+		// TODO: Eventually this logic should be removed. This just removes a debug shape
+		var renderers = GetComponentsInChildren<Renderer>();
+		foreach (var r in renderers) {
+			r.enabled = false;
+		}
 	}
 
 	// Update is called once per frame
